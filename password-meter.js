@@ -55,7 +55,13 @@ define(function(require){
     strength = (upper * 26 + lower * 26 + digits * 10 + special * 28) / max;
 
     if (length < this.options.minLength || (has_upper + has_lower + has_digits + has_special) < this.options.minComplexity) {
-      strength = Math.min(0.2, Math.sqrt(Math.max(0.00001, strength)));
+      strength = Math.sqrt( Math.min(0.002, Math.max(0.00001, strength)));
+    } else {
+      strength = Math.sqrt( Math.max(0.002, strength));
+    }
+
+    if( length >= this.options.minLength && (has_upper + has_lower + has_digits + has_special) >= this.options.minComplexity){
+      strength = Math.sqrt(Math.max(0.45, strength));
     }
 
 
