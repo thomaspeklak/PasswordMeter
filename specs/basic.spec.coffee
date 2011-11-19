@@ -8,10 +8,8 @@ describe 'PasswordMeter', ->
   it 'should be able to check a password', ->
     password_meter = new PasswordMeter
     test = password_meter.check 'test'
-    expect(test).toBeDefined()
-    expect(test).tobe
-    expect(test).toBeGreaterThan -1
-    expect(test).toBeLessThan 101
+    expect(test).toBeGreaterThan -0.000011
+    expect(test).toBeLessThan(1.00001)
 
   it 'should be less than .1 as long as the length is less than minLength', ->
     password_meter = new PasswordMeter(minLength:12)

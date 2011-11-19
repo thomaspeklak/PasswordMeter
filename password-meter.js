@@ -9,8 +9,8 @@ define(function(require){
     special : false
   },
   regexps = {
-    upper : /[A_Z]/g,
-    lower : /[A_Z]/g,
+    upper : /[A-Z]/g,
+    lower : /[a-z]/g,
     digits: /[0-9]/g,
     special: /[^0-9a-zA-Z]/g
   },
@@ -24,11 +24,11 @@ define(function(require){
   },
 
   transform = function(strength, beginning, step, maximum) {
-    var beginning = 0,
-        step      = 1,
-        maximum   = 1;
+    beginning = 0;
+    step      = 1;
+    maximum   = 1;
 
-    if ((strength/=maximum/2) < 1) return step/2*strength*strength + beginning;
+    if ((strength/=maximum/2) < 1) {return step/2*strength*strength + beginning;}
     return -step/2 * ((--strength)*(strength-2) - 1) + beginning;
   }
 
@@ -47,14 +47,20 @@ define(function(require){
         has_upper   = upper > 0,
         has_lower   = lower > 0,
         has_digits  = digits > 0,
-        has_special = special > 0;
+        has_special = special > 0,
+        max = (26 + 26 + 10 + 28) * 12;
 
-    if (length >= this.options.minLength && (has_upper + has_lower + has_digits + has_special) >= this.options.minComplexity) {
-      strength = (has_upper + has_lower + has_digits + has_special) * 5 * length * length / this.options.minLength / 100 + .1;
+
+
+    strength = (upper * 26 + lower * 26 + digits * 10 + special * 28) / max;
+
+    if (length < this.options.minLength || (has_upper + has_lower + has_digits + has_special) < this.options.minComplexity) {
+      strength = Math.min(0.2, Math.sqrt(Math.max(0.00001, strength)));
     }
+
 
     return transform(Math.min(strength, 1));
   };
   return {PasswordMeter:PasswordMeter};
 });
-})(typeof define=="function"?define:function(factory){module.exports = factory(require)});
+})(typeof define=="function"?define:function(factory){module.exports = factory(require);});
